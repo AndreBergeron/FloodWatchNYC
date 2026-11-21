@@ -1,12 +1,17 @@
 import logging
 
-def SetupLogging():
+def SetupLogging(message):
 
     try:
-        logging.basicConfig(level=logging.INFO, filename="process.log", filemode="w")
+        logging.basicConfig(format= "%(asctime)s | %(levelname)s | %(message)s", 
+                            datefmt="%H:%M:%S",
+                            level=logging.INFO, 
+                            filename="process.log", 
+                            filemode="w")
         logger = logging.getLogger("process")
-        logger.setLevel(logging.INFO)
-        logging.info('This is a test: %s')
+        logger.info('Process initiated: %s', message)
 
     except Exception as e:
-        print(e)
+        logging.warning('This is an error %s', e)
+
+    return None

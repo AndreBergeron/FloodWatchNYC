@@ -26,4 +26,11 @@ arcpy.env.workspace = os.getcwd()
 arcpy.env.overwriteOutput = True
 arcpy.env.outputCoordinateSystem = arcpy.SpatialReference(4326)
 
-def ():
+def InitiateProcess():
+
+    logger.SetupLogging("\t\t This is a test")
+    
+    logger.SetupLogging("\t\t This is a test")
+    return
+
+InitiateProcess()
