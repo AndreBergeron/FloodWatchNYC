@@ -43,6 +43,7 @@ def ProcessCensusData():
                                 break
                         sEvacuationZonesGeojsonPath = None
                         sEvacuationCentersGeojsonPath = None
+                        sFloodVulnerabilityIndexGeojsonPath = None
                         for file in glob.glob(os.path.join(sEvacuationPaths, "*.geojson")):
                             if "Hurricane_Evacuation_Zones" in file:
                                 sEvacuationZonesGeojsonPath = file
@@ -50,7 +51,10 @@ def ProcessCensusData():
                             elif "Hurricane_Evacuation_Centers" in file:
                                 sEvacuationCentersGeojsonPath = file
                                 logger.SetupLogging(f"\tFound evacuation centers geojson file: {sEvacuationCentersGeojsonPath}")
-                            if sEvacuationZonesGeojsonPath and sEvacuationCentersGeojsonPath:
+                            elif "New_York_City's_Flood_Vulnerability_Index" in file:
+                                sFloodVulnerabilityIndexGeojsonPath = file
+                                logger.SetupLogging(f"\tFound flood vulnerability index geojson file: {sFloodVulnerabilityIndexGeojsonPath}")
+                            if sEvacuationZonesGeojsonPath and sEvacuationCentersGeojsonPath and sFloodVulnerabilityIndexGeojsonPath:
                                 break
 
         sOutputFeatureClasspath = os.path.join(GDB, "Census_Tracts")
@@ -67,6 +71,11 @@ def ProcessCensusData():
         arcpy.JSONToFeatures_conversion(sEvacuationCentersGeojsonPath, sOutputFeatureClasspathEvac, "POINT")
         arcpy.MakeFeatureLayer_management(sOutputFeatureClasspathEvac, "NYC_Evacuation_Centers_Layer")
         logger.SetupLogging(f"\tOutput feature class path: {sOutputFeatureClasspathEvac}")
+
+        sOutputFeatureClasspathFVI = os.path.join(GDB, "Flood_Vulnerability_Index")
+        arcpy.JSONToFeatures_conversion(sFloodVulnerabilityIndexGeojsonPath, sOutputFeatureClasspathFVI, "POLYGON")
+        arcpy.MakeFeatureLayer_management(sOutputFeatureClasspathFVI, "NYC_Flood_Vulnerability_Index_Layer")
+        logger.SetupLogging(f"\tOutput feature class path: {sOutputFeatureClasspathFVI}")
 
         sCsvPath = os.path.join(DATAPATH, "raw", "census", "census_data.csv")
         sCensusTablePath = os.path.join(GDB, "Census_Data")
